@@ -15,11 +15,17 @@ function login() {
     .then(data => {
         if (data.success) {
             alert(data.message);
+            const user = data.items[0].user;
             const token = data.items[0].token;
-            // Armazene o token no localStorage
+
+            // Armazena o token e as informações do usuário no localStorage
             localStorage.setItem('authToken', token);
-            // Redirecione para a página principal ou home após o login
-            window.location.href = 'home.html';
+            localStorage.setItem('userId', user._id);
+            localStorage.setItem('userName', user.name);
+            localStorage.setItem('userEmail', user.email);
+
+            // Redireciona para a página de perfil
+            window.location.href = 'profile.html';
         } else {
             alert('Erro no login. Verifique suas credenciais.');
         }

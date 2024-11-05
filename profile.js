@@ -1,32 +1,16 @@
-// profile.js
-
 function loadUserProfile() {
-    const token = localStorage.getItem('token');
-    if (!token) {
+    const userName = localStorage.getItem('userName');
+    const userEmail = localStorage.getItem('userEmail');
+
+    if (!userName || !userEmail) {
         alert('Você precisa estar logado para acessar esta página.');
         window.location.href = 'index.html';
         return;
     }
 
-    fetch('/api/user-profile', {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.name && data.email) {
-            document.getElementById('userName').textContent = data.name;
-            document.getElementById('userEmail').textContent = data.email;
-        } else {
-            alert('Erro ao carregar perfil. Faça login novamente.');
-            localStorage.removeItem('token');
-            window.location.href = 'index.html';
-        }
-    })
-    .catch(error => console.error('Erro:', error));
+    // Exibe as informações do usuário na página
+    document.getElementById('userName').textContent = userName;
+    document.getElementById('userEmail').textContent = userEmail;
 }
 
 // Funções para navegação
