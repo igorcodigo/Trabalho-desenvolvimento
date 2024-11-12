@@ -29,6 +29,7 @@ h2 {
 
 input[type="email"],
 input[type="password"],
+input[type="text"],
 button {
     width: 100%;
     padding: 12px;
@@ -60,6 +61,20 @@ a {
     margin-top: 10px;
 }
 
+textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    box-sizing: border-box;
+    resize: vertical; /* Permite redimensionar verticalmente */
+    min-height: 100px; /* Define uma altura mínima */
+}
+
+
+
 /* Estilos responsivos para dispositivos móveis */
 @media (max-width: 600px) {
     h2 {
@@ -68,6 +83,7 @@ a {
 
     input[type="email"],
     input[type="password"],
+    input[type="text"],
     button {
         font-size: 18px; /* Aumenta as fontes para telas menores */
     }

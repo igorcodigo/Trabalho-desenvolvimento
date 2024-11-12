@@ -22,5 +22,9 @@ function findServices() {
     window.location.href = 'find-services.html';
 }
 
+function goToCreateService() {
+    window.location.href = 'create-service.html'; // Nova função
+}
+
 // Carregar o perfil do usuário ao carregar a página
 window.onload = loadUserProfile;
