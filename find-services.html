@@ -4,16 +4,25 @@
     <meta charset="UTF-8">
     <title>Procurar Serviços</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="find-services.css">
 </head>
-<body>
+<body class="find-services">
     <div class="container">
-        <h2>Procurar Serviços</h2>
-        <input type="text" id="searchBar" placeholder="Digite para pesquisar serviços...">
-        <button onclick="searchServices()">Pesquisar</button>
+        <!-- Botão "Voltar ao Perfil" no topo -->
+        <button onclick="goBack()" class="back-button">Voltar ao Perfil</button>
+
+        <div class="header">
+            <h2>Procurar Serviços</h2>
+            <!-- Barra de pesquisa -->
+            <div class="search-container">
+                <input type="text" id="searchBar" placeholder="Digite para pesquisar serviços...">
+                <button onclick="searchServices()">Pesquisar</button>
+            </div>
+        </div>
+
         <div id="servicesList">
             <!-- Lista de serviços será exibida aqui -->
         </div>
-        <button onclick="goBack()">Voltar ao Perfil</button>
     </div>
 
     <script src="find-services.js"></script>

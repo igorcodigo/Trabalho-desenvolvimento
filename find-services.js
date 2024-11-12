@@ -1,4 +1,5 @@
-// Função para carregar todos os serviços ao carregar a página
+document.addEventListener('DOMContentLoaded', loadServices);
+
 function loadServices() {
     const baseURL = 'https://n70231backend-ivrcwps1.b4a.run'; // Substitua pelo seu baseURL
     const authToken = localStorage.getItem('authToken');
@@ -12,6 +13,7 @@ function loadServices() {
     })
     .then(response => response.json())
     .then(data => {
+        console.log('Dados recebidos:', data);
         if (data.success) {
             displayServices(data.items);
         } else {
@@ -21,29 +23,31 @@ function loadServices() {
     .catch(error => console.error('Erro:', error));
 }
 
-// Função para exibir os serviços na página
 function displayServices(services) {
     const servicesList = document.getElementById('servicesList');
-    servicesList.innerHTML = ''; // Limpa a lista antes de exibir
+    servicesList.innerHTML = '';
 
     services.forEach(service => {
         const serviceItem = document.createElement('div');
-        serviceItem.classList.add('service-item');
+        serviceItem.classList.add('service-card');
+
+        const title = service.title || 'Título não disponível';
+        const description = service.description || 'Descrição não disponível';
+        const imageUrl = service.image || '';
 
         serviceItem.innerHTML = `
-            <h3>${service.title}</h3>
-            <p>${service.description}</p>
-            ${service.image ? `<img src="${service.image}" alt="${service.title}">` : ''}
+            <h3 class="service-title">${title}</h3>
+            <p class="service-description">${description}</p>
+            ${imageUrl ? `<img src="${imageUrl}" alt="${title}" class="service-image">` : ''}
         `;
 
         servicesList.appendChild(serviceItem);
     });
 }
 
-// Função para pesquisar serviços pelo título
 function searchServices() {
     const searchTerm = document.getElementById('searchBar').value.toLowerCase();
-    const baseURL = 'https://n70231backend-ivrcwps1.b4a.run'; // Substitua pelo seu baseURL
+    const baseURL = 'https://n70231backend-ivrcwps1.b4a.run';
     const authToken = localStorage.getItem('authToken');
 
     fetch(`${baseURL}/v1/services`, {
@@ -56,9 +60,8 @@ function searchServices() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Filtra os serviços com base no termo de pesquisa
-            const filteredServices = data.items.filter(service => 
-                service.title.toLowerCase().includes(searchTerm)
+            const filteredServices = data.items.filter(service =>
+                (service.title || '').toLowerCase().includes(searchTerm)
             );
             displayServices(filteredServices);
         } else {
@@ -68,10 +71,6 @@ function searchServices() {
     .catch(error => console.error('Erro:', error));
 }
 
-// Função para voltar ao perfil
 function goBack() {
     window.location.href = 'profile.html';
 }
-
-// Carrega todos os serviços ao carregar a página
-window.onload = loadServices;
