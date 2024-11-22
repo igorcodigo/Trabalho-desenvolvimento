@@ -1,6 +1,21 @@
-// service-details.js
+let selectedRating = 0;
 
-document.addEventListener('DOMContentLoaded', loadServiceDetails);
+document.addEventListener('DOMContentLoaded', () => {
+    loadServiceDetails();
+    setupStarRating();
+});
+
+function setupStarRating() {
+    const stars = document.querySelectorAll('.star');
+    stars.forEach(star => {
+        star.addEventListener('click', () => {
+            selectedRating = star.getAttribute('data-rating');
+            stars.forEach(s => {
+                s.classList.toggle('active', parseInt(s.getAttribute('data-rating')) <= selectedRating);
+            });
+        });
+    });
+}
 
 function loadServiceDetails() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -14,7 +29,7 @@ function loadServiceDetails() {
         return;
     }
 
-    // Modificado para usar a rota de serviço por ID
+    // Fetch service details
     fetch(`${baseURL}/v1/services/${serviceId}`, {
         method: 'GET',
         headers: {
@@ -22,15 +37,11 @@ function loadServiceDetails() {
             'Authorization': `Bearer ${authToken}`
         }
     })
-    .then(response => {
-        console.log('Status da resposta:', response.status);
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
-        console.log('Dados recebidos:', data);
-        
         if (data) {
             displayServiceDetails(data);
+            loadServiceReviews(serviceId);
         } else {
             console.error('Serviço não encontrado:', data);
             alert('Serviço não encontrado.');
@@ -44,30 +55,115 @@ function loadServiceDetails() {
     });
 }
 
-// Resto do código permanece o mesmo
+function loadServiceReviews(serviceId) {
+    const baseURL = 'https://n70231backend-ivrcwps1.b4a.run';
+    const authToken = localStorage.getItem('authToken');
+
+    fetch(`${baseURL}/v1/review?serviceId=${serviceId}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erro ao buscar avaliações');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Reviews received:', data); // Log completo para debugging
+
+        // Verificar se o campo 'items' existe e contém dados
+        const reviews = data.items || [];
+        
+        // Calcular a nota média
+        const averageRating = reviews.length > 0 
+            ? (reviews.reduce((sum, review) => sum + parseInt(review.grade), 0) / reviews.length).toFixed(1)
+            : '0';
+
+        // Atualizar a lista de avaliações
+        const reviewsList = document.getElementById('reviewsList');
+        reviewsList.innerHTML = reviews.map(review => `
+            <div class="review">
+                <div class="review-rating">${'★'.repeat(review.grade)}</div>
+                <p>${review.description}</p>
+            </div>
+        `).join('');
+
+        // Atualizar o resumo das avaliações (opcional)
+        const reviewSummary = document.getElementById('reviewSummary');
+        if (reviewSummary) {
+            reviewSummary.innerHTML = `
+                <p>Total de avaliações: ${reviews.length}</p>
+                <p>Nota média: ${averageRating}/5</p>
+            `;
+        }
+    })
+    .catch(error => {
+        console.error('Erro ao carregar avaliações:', error);
+        alert('Não foi possível carregar as avaliações');
+    });
+}
+
+
+
+function submitReview() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const serviceId = urlParams.get('id');
+    const baseURL = 'https://n70231backend-ivrcwps1.b4a.run';
+    const authToken = localStorage.getItem('authToken');
+    const userId = localStorage.getItem('userId');
+    const description = document.getElementById('reviewDescription').value;
+
+    if (!selectedRating || !description.trim()) {
+        alert('Por favor, selecione uma nota e escreva um comentário');
+        return;
+    }
+
+    fetch(`${baseURL}/v1/review`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+        },
+        body: JSON.stringify({
+            grade: selectedRating,
+            description: description,
+            serviceId: serviceId,
+            userId: userId
+        })
+    })
+    .then(response => {
+        if (response.ok) {
+            alert('Avaliação enviada com sucesso!');
+            document.getElementById('reviewDescription').value = '';
+            selectedRating = 0;
+            document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
+            loadServiceReviews(serviceId);
+        } else {
+            throw new Error('Erro ao enviar avaliação');
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao enviar avaliação');
+    });
+}
 
 function displayServiceDetails(service) {
     const detailsContainer = document.getElementById('serviceDetails');
     
-    console.log('Exibindo detalhes do serviço:', service);
-
     const title = service.title || 'Título não disponível';
     const description = service.description || 'Descrição não disponível';
-    const imageUrl = service.image || '';
-    const price = service.price || 'Preço não disponível';
-    const duration = service.duration || 'Duração não disponível';
-    const category = service.category || 'Categoria não disponível';
+    const imageUrl = service.image || ''; 
 
     detailsContainer.innerHTML = `
         <h2 class="service-title">${title}</h2>
         ${imageUrl ? `<img src="${imageUrl}" alt="${title}" class="service-image">` : ''}
         <div class="service-info">
-            <p class="service-description">${description}</p>
-            <div class="service-metadata">
-                <p><strong>Categoria:</strong> ${category}</p>
-                <p><strong>Preço:</strong> R$ ${price}</p>
-                <p><strong>Duração:</strong> ${duration}</p>
-            </div>
+            <p class="service-description">${description}</p> 
         </div>
     `;
 }

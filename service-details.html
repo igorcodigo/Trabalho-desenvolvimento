@@ -5,13 +5,52 @@
     <title>Detalhes do Serviço</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="service-details.css">
+    <style>
+        .star-rating {
+            display: flex;
+            align-items: center;
+        }
+        .star {
+            cursor: pointer;
+            color: #ddd;
+            font-size: 30px;
+        }
+        .star.active {
+            color: gold;
+        }
+        .reviews-section {
+            margin-top: 20px;
+        }
+        .review-form {
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body class="service-details">
     <div class="container">
         <button onclick="goBack()" class="back-button">Voltar à Lista de Serviços</button>
         <div id="serviceDetails" class="details-container">
-            <!-- Um indicador de carregamento enquanto os dados são buscados -->
             <div class="loading">Carregando detalhes do serviço...</div>
+        </div>
+
+        <div id="reviewSection" class="reviews-section">
+            <h3>Avalie este Serviço</h3>
+            <div class="review-form">
+                <div class="star-rating">
+                    <span class="star" data-rating="1">★</span>
+                    <span class="star" data-rating="2">★</span>
+                    <span class="star" data-rating="3">★</span>
+                    <span class="star" data-rating="4">★</span>
+                    <span class="star" data-rating="5">★</span>
+                </div>
+                <textarea id="reviewDescription" placeholder="Deixe seu comentário"></textarea>
+                <button onclick="submitReview()">Enviar Avaliação</button>
+            </div>
+            
+            <div id="existingReviews">
+                <h3>Avaliações anteriores</h3>
+                <div id="reviewsList"></div>
+            </div>
         </div>
     </div>
     <script src="service-details.js"></script>
