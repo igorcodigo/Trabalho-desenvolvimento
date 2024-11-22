@@ -30,7 +30,8 @@ function displayServices(services) {
     services.forEach(service => {
         const serviceItem = document.createElement('div');
         serviceItem.classList.add('service-card');
-
+        serviceItem.style.cursor = 'pointer';
+        
         const title = service.title || 'Título não disponível';
         const description = service.description || 'Descrição não disponível';
         const imageUrl = service.image || '';
@@ -40,6 +41,11 @@ function displayServices(services) {
             <p class="service-description">${description}</p>
             ${imageUrl ? `<img src="${imageUrl}" alt="${title}" class="service-image">` : ''}
         `;
+
+        // Adiciona o evento de clique para navegar para a página de detalhes
+        serviceItem.addEventListener('click', () => {
+            window.location.href = `service-details.html?id=${service._id}`;
+        });
 
         servicesList.appendChild(serviceItem);
     });
