@@ -125,6 +125,7 @@
         </div>
 
         <div class="buttons">
+            <button onclick="goToHome()">Página Inicial</button>
             <button onclick="goToCreateService()">Criar Serviço</button>
         </div>
 
@@ -226,6 +227,10 @@
 
         function goToCreateService() {
             window.location.href = 'create-service.html';
+        }
+
+        function goToHome() {
+            window.location.href = 'profile.html';
         }
 
         window.onload = loadUserProfile;
