@@ -24,14 +24,35 @@
         .review-form {
             margin-bottom: 20px;
         }
+        .contact-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 0;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .contact-button:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body class="service-details">
     <div class="container">
         <button onclick="goBack()" class="back-button">Voltar à Lista de Serviços</button>
+        
         <div id="serviceDetails" class="details-container">
             <div class="loading">Carregando detalhes do serviço...</div>
         </div>
+
+        <!-- Novo botão para ver contato do profissional -->
+        <button id="viewContactButton" class="contact-button" onclick="viewProfessionalContact()">Ver Contato do Profissional</button>
 
         <div id="reviewSection" class="reviews-section">
             <h3>Avalie este Serviço</h3>
@@ -53,6 +74,18 @@
             </div>
         </div>
     </div>
+    <script>
+        // Função para redirecionar para a página do profissional
+        function viewProfessionalContact() {
+            // Presumivelmente, recuperar o ID do profissional de algum lugar
+            const professionalId = document.querySelector('#serviceDetails').dataset.professionalId;
+            if (professionalId) {
+                window.location.href = `/profissional/${professionalId}`;
+            } else {
+                alert('Informações do profissional não encontradas.');
+            }
+        }
+    </script>
     <script src="service-details.js"></script>
 </body>
 </html>

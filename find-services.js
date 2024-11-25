@@ -23,7 +23,7 @@ function loadServices() {
     .catch(error => console.error('Erro:', error));
 }
 
-function displayServices(services) {
+function displayServices(services, userId) { // Recebe o userId como parâmetro
     const servicesList = document.getElementById('servicesList');
     servicesList.innerHTML = '';
 
@@ -44,7 +44,8 @@ function displayServices(services) {
 
         // Adiciona o evento de clique para navegar para a página de detalhes
         serviceItem.addEventListener('click', () => {
-            window.location.href = `service-details.html?id=${service._id}`;
+            // Inclui o userId no URL
+            window.location.href = `service-details.html?id=${service._id}&userId=${service.userId}`;
         });
 
         servicesList.appendChild(serviceItem);

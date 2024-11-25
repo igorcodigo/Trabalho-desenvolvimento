@@ -73,17 +73,13 @@ function loadServiceReviews(serviceId) {
         return response.json();
     })
     .then(data => {
-        console.log('Reviews received:', data); // Log completo para debugging
-
-        // Verificar se o campo 'items' existe e contém dados
+        console.log('Reviews received:', data);
         const reviews = data.items || [];
         
-        // Calcular a nota média
         const averageRating = reviews.length > 0 
             ? (reviews.reduce((sum, review) => sum + parseInt(review.grade), 0) / reviews.length).toFixed(1)
             : '0';
 
-        // Atualizar a lista de avaliações
         const reviewsList = document.getElementById('reviewsList');
         reviewsList.innerHTML = reviews.map(review => `
             <div class="review">
@@ -92,7 +88,6 @@ function loadServiceReviews(serviceId) {
             </div>
         `).join('');
 
-        // Atualizar o resumo das avaliações (opcional)
         const reviewSummary = document.getElementById('reviewSummary');
         if (reviewSummary) {
             reviewSummary.innerHTML = `
@@ -106,8 +101,6 @@ function loadServiceReviews(serviceId) {
         alert('Não foi possível carregar as avaliações');
     });
 }
-
-
 
 function submitReview() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -158,6 +151,12 @@ function displayServiceDetails(service) {
     const title = service.title || 'Título não disponível';
     const description = service.description || 'Descrição não disponível';
     const imageUrl = service.image || ''; 
+    // const providerId = service.providerId || null;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const providerId  = urlParams.get('userId'); // Obtém o ID do usuário || null;
+    // Add data attribute for professional ID
+    detailsContainer.setAttribute('data-professional-id', providerId);
 
     detailsContainer.innerHTML = `
         <h2 class="service-title">${title}</h2>
@@ -166,6 +165,15 @@ function displayServiceDetails(service) {
             <p class="service-description">${description}</p> 
         </div>
     `;
+}
+
+function viewProfessionalContact() {
+    const professionalId = document.getElementById('serviceDetails').getAttribute('data-professional-id');
+    if (professionalId) {
+        window.location.href = `profissional.html?id=${professionalId}`;
+    } else {
+        alert('Informações do profissional não encontradas.');
+    }
 }
 
 function goBack() {
